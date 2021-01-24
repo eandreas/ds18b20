@@ -12,6 +12,9 @@ entries:
     - output: web,pdf
       title: ds18b20
       url: core.html
+    - output: web,pdf
+      title: Title
+      url: figure.html
     output: web
     title: ds18b20
   output: web
