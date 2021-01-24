@@ -12,7 +12,7 @@ This file will become your README and also the index of your documentation.
 
 Fill me in please! Don't forget code examples:
 
-```python
+```
 d = Device(base_dir='resources/')
 data_points = d.get_temps()
 
