@@ -16,8 +16,8 @@ external_stylesheets = [
 app = dash.Dash(__name__, external_stylesheets=external_stylesheets)
 
 def load_data():
-    temp_file = Path('../resources/get_temp.out')
-    # temp_file = Path('/home/pi/get_temp.out')
+    #temp_file = Path('../resources/get_temp.out')
+    temp_file = Path('/home/pi/get_temp.out')
     return pd.read_csv(temp_file, sep=' ', header=None, names=['date', 'time', 'temp'], parse_dates=[['date', 'time']])
 
 def build_figure(df):
