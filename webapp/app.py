@@ -26,6 +26,7 @@ def build_figure():
         title_text="Gemessene Temperatur - DS18B20@dragonfly",
         xaxis_title="Datum",
         yaxis_title="Temperatur / °C",
+        template='none'
     )
     fig.update_layout(
         xaxis=dict(
