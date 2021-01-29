@@ -16,4 +16,4 @@ temps = device.get_temps()
 
 # print device serial number, date and time, and the temperature in C
 for dp in temps:
-    print(dp.get_device_sn(), dp.get_date_time(), format(dp.get_temp_C()))
+    print(dp.get_device_sn(), dp.get_date_time(), format(dp.get_temp_C(), '.3f'))
