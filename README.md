@@ -12,17 +12,27 @@ This file will become your README and also the index of your documentation.
 
 Fill me in please! Don't forget code examples:
 
+```python
+device = Device(base_dir='resources/')
+
+# values from calibration
+raw_low = -1.563
+raw_high = 97.75
+ref_low = 0.01
+ref_high = 98.7
+
+# set calibration
+device.set_calibration(raw_low, raw_high, ref_low, ref_high)
+
+temps = device.get_temps()
+
+
+for dp in temps:
+    print(dp.get_device_sn(), dp.get_date_time(), format(dp.get_temp_C(), '.3f'))
+
+
 ```
-d = Device(base_dir='resources/')
-data_points = d.get_temps()
 
-
-for dp in data_points:
-    dp.print_date_time()
-
-
-```
-
-    2021-01-24 15:24:21
-    2021-01-24 15:24:21
+    28-03219779d857 2021-01-29 23:31:54.022935 21.959
+    28-03219779d339 2021-01-29 23:31:54.023083 22.183
 

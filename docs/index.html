@@ -69,12 +69,22 @@ nb_path: "index.ipynb"
 
 <div class="inner_cell">
     <div class="input_area">
-<div class=" highlight hl-ipython3"><pre><span></span><span class="n">d</span> <span class="o">=</span> <span class="n">Device</span><span class="p">(</span><span class="n">base_dir</span><span class="o">=</span><span class="s1">&#39;resources/&#39;</span><span class="p">)</span>
-<span class="n">data_points</span> <span class="o">=</span> <span class="n">d</span><span class="o">.</span><span class="n">get_temps</span><span class="p">()</span>
+<div class=" highlight hl-ipython3"><pre><span></span><span class="n">device</span> <span class="o">=</span> <span class="n">Device</span><span class="p">(</span><span class="n">base_dir</span><span class="o">=</span><span class="s1">&#39;resources/&#39;</span><span class="p">)</span>
+
+<span class="c1"># values from calibration</span>
+<span class="n">raw_low</span> <span class="o">=</span> <span class="o">-</span><span class="mf">1.563</span>
+<span class="n">raw_high</span> <span class="o">=</span> <span class="mf">97.75</span>
+<span class="n">ref_low</span> <span class="o">=</span> <span class="mf">0.01</span>
+<span class="n">ref_high</span> <span class="o">=</span> <span class="mf">98.7</span>
+
+<span class="c1"># set calibration</span>
+<span class="n">device</span><span class="o">.</span><span class="n">set_calibration</span><span class="p">(</span><span class="n">raw_low</span><span class="p">,</span> <span class="n">raw_high</span><span class="p">,</span> <span class="n">ref_low</span><span class="p">,</span> <span class="n">ref_high</span><span class="p">)</span>
+
+<span class="n">temps</span> <span class="o">=</span> <span class="n">device</span><span class="o">.</span><span class="n">get_temps</span><span class="p">()</span>
 
 
-<span class="k">for</span> <span class="n">dp</span> <span class="ow">in</span> <span class="n">data_points</span><span class="p">:</span>
-    <span class="n">dp</span><span class="o">.</span><span class="n">print_date_time</span><span class="p">()</span>
+<span class="k">for</span> <span class="n">dp</span> <span class="ow">in</span> <span class="n">temps</span><span class="p">:</span>
+    <span class="nb">print</span><span class="p">(</span><span class="n">dp</span><span class="o">.</span><span class="n">get_device_sn</span><span class="p">(),</span> <span class="n">dp</span><span class="o">.</span><span class="n">get_date_time</span><span class="p">(),</span> <span class="nb">format</span><span class="p">(</span><span class="n">dp</span><span class="o">.</span><span class="n">get_temp_C</span><span class="p">(),</span> <span class="s1">&#39;.3f&#39;</span><span class="p">))</span>
 </pre></div>
 
     </div>
@@ -87,8 +97,8 @@ nb_path: "index.ipynb"
 <div class="output_area">
 
 <div class="output_subarea output_stream output_stdout output_text">
-<pre>2021-01-24 15:24:21
-2021-01-24 15:24:21
+<pre>28-03219779d857 2021-01-29 23:31:54.022935 21.959
+28-03219779d339 2021-01-29 23:31:54.023083 22.183
 </pre>
 </div>
 </div>

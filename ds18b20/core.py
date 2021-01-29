@@ -60,6 +60,18 @@ class Device:
         self.base_dir = base_dir
         path = Path(base_dir).glob(device_sn + '/w1_slave')
         self.device_files = [x for x in path if x.is_file()]
+        self.raw_low = None
+        self.raw_high = None
+        self.ref_low = None
+        self.ref_high = None
+
+    def set_calibration(self, raw_low, raw_high, ref_low, ref_high):
+        self.raw_low = raw_low
+        self.raw_high = raw_high
+        self.ref_low = ref_low
+        self.ref_high = ref_high
+        self.ref_range = ref_high - ref_low
+        self.raw_range = raw_high - raw_low
 
     def __read_raw(self, device_file):
         with open(device_file, 'r') as f:
@@ -69,7 +81,7 @@ class Device:
     def __device_sn(self, device_file):
         return re.findall(r'.*?/(.*?)/w1_slave', str(device_file))[0]
 
-    def get_temps(self):
+    def get_temps_raw(self):
         temps = list()
         for df in self.device_files:
             rows = self.__read_raw(df)
@@ -83,4 +95,14 @@ class Device:
                 temperature = float(rows[1][pos + 2:])
                 data_point = DataPoint(device_sn, date_time, temperature)
                 temps.append(data_point)
+        return temps
+
+    def get_temps(self):
+        temps = self.get_temps_raw()
+        if self.raw_low is None:
+            return temps
+        for dp in temps:
+            raw_value = dp.temp_raw / 1000.0
+            corr_value = ((raw_value - self.raw_low) * self.ref_range / self.raw_range) + self.ref_low
+            dp.temp_raw = corr_value * 1000.0
         return temps
