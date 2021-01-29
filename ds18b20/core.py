@@ -79,7 +79,8 @@ class Device:
             return rows
 
     def __device_sn(self, device_file):
-        return re.findall(r'.*?/(.*?)/w1_slave', str(device_file))[0]
+        dev_path = str(re.findall(r'.*?/(.*?)/w1_slave', str(device_file))[0])
+        return dev_path.split('/')[-1]
 
     def get_temps_raw(self):
         temps = list()
