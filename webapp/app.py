@@ -1,5 +1,6 @@
 from pathlib2 import Path
 import dash
+from dash.dependencies import Output, Input
 import dash_core_components as dcc
 import dash_html_components as html
 import plotly.express as px
@@ -85,9 +86,14 @@ def get_temp_graph(df):
             dbc.CardBody(
                 [
                     dcc.Graph(
-                        id='example-graph',
+                        id='live_temp_graph',
                         figure=build_figure(df),
                         config={'displayModeBar': False}
+                    ),
+                    dcc.Interval(
+                        id = 'graph_update_interval',
+                        interval = 1 * 1000,
+                        n_intervals=0
                     )
                 ]
             )
@@ -108,6 +114,10 @@ def serve_layout():
         get_body(load_data())
     ])
 
+@app.callback(Output('live_temp_graph', 'figure'),
+              Input('graph_update_interval', 'n_intervals'))
+def update_graph_scatter(n):
+    return build_figure(load_data())
 
 app.layout = serve_layout
 
