@@ -18,34 +18,28 @@ def add_one_wire_modules():
 # Cell
 class DataPoint:
     "TODO"
-    def __init__(self, device_sn, date_time, temp_raw):
-        self.device_sn = device_sn
-        self.date_time = date_time
-        self.temp_raw = temp_raw
+    def __init__(self, device_sn, date_time, temp_raw, temp_corr = None):
+        self.__device_sn = device_sn
+        self.__date_time = date_time
+        self.__temp_raw = temp_raw
+        self.__temp_corr = temp_corr
+        if temp_corr is None:
+            self.__temp_corr = temp_raw
 
     def get_device_sn(self):
-        return self.device_sn
+        return self.__device_sn
 
     def get_date_time(self):
-        return self.date_time
-
-    def get_date(self):
-        return self.date_time.date()
-
-    def get_time(self):
-        return self.date_time.time()
+        return self.__date_time
 
     def print_date_time(self):
-        print(self.date_time.strftime('%Y-%m-%d %H:%M:%S'))
+        print(self.__date_time.strftime('%Y-%m-%d %H:%M:%S'))
 
-    def print_date(self):
-        print(self.date_time.strftime('%Y-%m-%d'))
-
-    def print_time(self):
-        print(self.date_time.strftime('%H:%M:%S'))
+    def get_temp_raw(self):
+        return self.__temp_raw
 
     def get_temp_C(self):
-        return self.temp_raw / 1000.0
+        return self.__temp_corr / 1000.0
 
     def get_temp_F(self):
         return self.get_temp_C() * 9.0 / 5.0 + 32.0
@@ -60,18 +54,14 @@ class Device:
         self.base_dir = base_dir
         path = Path(base_dir).glob(device_sn + '/w1_slave')
         self.device_files = [x for x in path if x.is_file()]
-        self.raw_low = None
-        self.raw_high = None
-        self.ref_low = None
-        self.ref_high = None
+        self.__raw_low = None
+        self.__ref_low = None
+        self.__f_corr = None
 
     def set_calibration(self, raw_low, raw_high, ref_low, ref_high):
-        self.raw_low = raw_low
-        self.raw_high = raw_high
-        self.ref_low = ref_low
-        self.ref_high = ref_high
-        self.ref_range = ref_high - ref_low
-        self.raw_range = raw_high - raw_low
+        self.__raw_low = raw_low
+        self.__ref_low = ref_low
+        self.__f_corr = (ref_high - ref_low) / (raw_high - raw_low)
 
     def __read_raw(self, device_file):
         with open(device_file, 'r') as f:
@@ -79,31 +69,24 @@ class Device:
             return rows
 
     def __device_sn(self, device_file):
-        dev_path = str(re.findall(r'.*?/(.*?)/w1_slave', str(device_file))[0])
-        return dev_path.split('/')[-1]
+        dev_path = str(re.findall(r'.*?/(28.*?)/w1_slave', str(device_file))[0])
+        return dev_path
 
-    def get_temps_raw(self):
+    def get_temps(self):
         temps = list()
         for df in self.device_files:
             rows = self.__read_raw(df)
             while rows[0].strip()[-3:] != 'YES':
-                time.sleep(0.2)
+                time.sleep(0.1)
                 rows = read_temp_raw()
             pos = rows[1].find('t=')
             if pos != -1:
                 device_sn = self.__device_sn(df)
                 date_time = dt.datetime.now()
-                temperature = float(rows[1][pos + 2:])
-                data_point = DataPoint(device_sn, date_time, temperature)
+                t_raw = float(rows[1][pos + 2:])
+                t_corr = t_raw
+                if self.__f_corr is not None:
+                    t_corr = ((t_raw / 1000.0 - self.__raw_low) * self.__f_corr + self.__ref_low) * 1000.0
+                data_point = DataPoint(device_sn, date_time, t_raw, t_corr)
                 temps.append(data_point)
-        return temps
-
-    def get_temps(self):
-        temps = self.get_temps_raw()
-        if self.raw_low is None:
-            return temps
-        for dp in temps:
-            raw_value = dp.temp_raw / 1000.0
-            corr_value = ((raw_value - self.raw_low) * self.ref_range / self.raw_range) + self.ref_low
-            dp.temp_raw = corr_value * 1000.0
         return temps
