@@ -16,14 +16,14 @@ external_stylesheets = [
 app = dash.Dash(__name__, external_stylesheets=external_stylesheets)
 
 def load_data():
-    #temp_file = Path('../resources/get_temp.out')
-    temp_file = Path('/home/pi/get_temp_C.out')
-    return pd.read_csv(temp_file, sep=' ', header=None, names=['dev_sn', 'date', 'time', 'temp'], parse_dates=[['date', 'time']])
+    temp_file = Path('/Users/eandreas/projects/dev/ds18b20/resources/get_temp_C.out')
+    #temp_file = Path('/home/pi/get_temp_C.out')
+    return pd.read_csv(temp_file, sep=' ', header=None, names=['dev_sn', 'date', 'time', 'temp_raw', 'temp_C'], parse_dates=[['date', 'time']])
 
 def build_figure(df):
     fig = go.Figure()
-    fig.add_trace(
-        go.Scatter(x=list(df.date_time), y=list(df.temp)))
+    fig.add_trace(go.Scatter(x=list(df.date_time), y=list(df.temp_C), name='t_corr'))
+    fig.add_trace(go.Scatter(x=list(df.date_time), y=list(df.temp_raw), name='t_raw'))
     fig.update_layout(
         #title_text="Gemessene Temperatur - DS18B20@dragonfly",
         xaxis_title="Datum",
