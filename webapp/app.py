@@ -92,7 +92,7 @@ def get_temp_graph(df):
                     ),
                     dcc.Interval(
                         id = 'graph_update_interval',
-                        interval = 1 * 1000,
+                        interval = 15 * 1000,
                         n_intervals=0
                     )
                 ]
