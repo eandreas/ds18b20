@@ -17,8 +17,8 @@ external_stylesheets = [
 app = dash.Dash(__name__, external_stylesheets=external_stylesheets)
 
 def load_data():
-    #temp_file = Path('/Users/eandreas/projects/dev/ds18b20/resources/get_temp_C.out')
-    temp_file = Path('/home/pi/get_temp_C.out')
+    temp_file = Path('/Users/eandreas/projects/dev/ds18b20/resources/get_temp_C.out')
+    #temp_file = Path('/home/pi/get_temp_C.out')
     return pd.read_csv(temp_file, sep=' ', header=None, names=['dev_sn', 'date', 'time', 'temp_raw', 'temp_C'], parse_dates=[['date', 'time']])
 
 def build_figure(df):
@@ -66,7 +66,8 @@ def build_figure(df):
                 visible=True
             ),
             type="date"
-        )
+        ),
+        uirevision="true"
     )
     return fig
 
@@ -90,23 +91,26 @@ def get_temp_graph(df):
                         figure=build_figure(df),
                         config={'displayModeBar': False}
                     ),
-#                    dcc.Interval(
-#                        id = 'graph_update_interval',
-#                        interval = 1 * 1000,
-#                        n_intervals=0
-#                    )
+                    dcc.Interval(
+                        id = 'graph_update_interval',
+                        interval = 1 * 1000,
+                        n_intervals=0
+                    )
                 ]
             )
         ]
     )
 
 def get_body(df):
-    return dbc.Container(
-        [
-            get_temp_graph(df),
-        ],
-        className="mt-2 mb-3",
-    )
+    retirm html.Div(children=[
+        
+    ], className='col-12')
+    #return dbc.Container(
+    #    [
+    #        get_temp_graph(df),
+    #    ],
+    #    className="mt-2 mb-3",
+    #)
 
 def serve_layout():
     return html.Div(children=[
@@ -114,10 +118,10 @@ def serve_layout():
         get_body(load_data())
     ])
 
-#@app.callback(Output('live_temp_graph', 'figure'),
-#              Input('graph_update_interval', 'n_intervals'))
-#def update_graph_scatter(n):
-#    return build_figure(load_data())
+@app.callback(Output('live_temp_graph', 'figure'),
+              Input('graph_update_interval', 'n_intervals'))
+def update_graph_scatter(n):
+    return build_figure(load_data())
 
 app.layout = serve_layout
 
