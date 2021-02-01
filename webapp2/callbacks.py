@@ -3,7 +3,21 @@ from dash.dependencies import Output, Input, State
 from dataloader import load_data
 from figures import build_figure
 
-def register_callbacks(app, df):
+# -- MOVE TO UTIL ?
+import pandas as pd
+
+def npdt2dtdt(npdt):
+    return pd.Timestamp(npdt).to_pydatetime()
+# -- end of MOVE TO UTIL
+
+def update_xaxes(df, fig, n):
+    n = min(len(df), n)
+    fig.update_layout(
+        xaxis_range = [npdt2dtdt(df.date_time.values[-n]), npdt2dtdt(df.date_time.values[-1])]
+    )
+    return fig
+
+def register_callbacks(app, df, fig):
     
     @app.callback(
         Output('live_temp_graph', 'figure'),
@@ -20,19 +34,20 @@ def register_callbacks(app, df):
     def update_output(btn_1h, btn_3h, btn_6h, btn_12h, btn_1d, btn_7d, btn_30d, btn_1y, btn_all):
         changed_id = [p['prop_id'] for p in dash.callback_context.triggered][0]
         if '1h-button' in changed_id:
-            return build_figure(df, 60)
+            return update_xaxes(df, fig, 60)
         elif '3h-button' in changed_id:
-            return build_figure(df, 3 * 60)
+            return update_xaxes(df, fig, 3 * 60)
         elif '6h-button' in changed_id:
-            return build_figure(df, 6 * 60)
+            return update_xaxes(df, fig, 6 * 60)
         elif '12h-button' in changed_id:
-            return build_figure(df, 12 * 60)
+            return update_xaxes(df, fig, 12 * 60)
         elif '1d-button' in changed_id:
-            return build_figure(df, 24 * 60)
+            return update_xaxes(df, fig, 24 * 60)
         elif '7d-button' in changed_id:
-            return build_figure(df, 7 * 24 * 60)
+            return update_xaxes(df, fig, 7 * 24 * 60)
         elif '30d-button' in changed_id:
-            return build_figure(df, 30 * 24 * 60)
+            return update_xaxes(df, fig, 30 * 24 * 60)
         elif '1y-button' in changed_id:
-            return build_figure(df, 365 * 24 * 60)
+            return update_xaxes(df, fig, 365 * 24 * 60)
+        # FIXME - replace build_figure by update_axes
         return build_figure(df)
