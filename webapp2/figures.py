@@ -9,6 +9,8 @@ def npdt2dtdt(npdt):
 
 
 def build_figure(df, n = None):
+    if n is not None:
+        n = min(len(df), n)
     fig = go.Figure()
     fig.add_trace(go.Scatter(x=list(df.date_time), y=list(df.temp_C), name='t_corr'))
     fig.add_trace(go.Scatter(x=list(df.date_time), y=list(df.temp_raw), name='t_raw'))

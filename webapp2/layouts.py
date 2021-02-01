@@ -54,19 +54,20 @@ temp_graph = html.Div([
                     html.H2("Temperaturverlauf", className="card-title"),
                     html.Div(
                         [
-                            dbc.Button("1 h", outline = True, color = 'dark', size="sm", className="mr-1"),
+                            dbc.Button("1 h", id = '1h-button',outline = True, color = 'dark', size="sm", className="mr-1"),
                             dbc.Button("3 h", id = '3h-button', outline = True, color = 'dark', size="sm", className="mr-1"),
-                            dbc.Button("6 h", outline = True, color = 'dark', size="sm", className="mr-1"),
-                            dbc.Button("12 h", outline = True, color = 'dark', size="sm", className="mr-1"),
-                            dbc.Button("1 d", outline = True, color = 'dark', size="sm", className="mr-1"),
-                            dbc.Button("7 d", outline = True, color = 'dark', size="sm", className="mr-1"),
-                            dbc.Button("1 m", outline = True, color = 'dark', size="sm", className="mr-1"),
-                            dbc.Button("1 y", outline = True, color = 'dark', size="sm", className="mr-1")
+                            dbc.Button("6 h", id = '6h-button',outline = True, color = 'dark', size="sm", className="mr-1"),
+                            dbc.Button("12 h", id = '12h-button',outline = True, color = 'dark', size="sm", className="mr-1"),
+                            dbc.Button("1 d", id = '1d-button',outline = True, color = 'dark', size="sm", className="mr-1"),
+                            dbc.Button("7 d", id = '7d-button',outline = True, color = 'dark', size="sm", className="mr-1"),
+                            dbc.Button("30 d", id = '30d-button',outline = True, color = 'dark', size="sm", className="mr-1"),
+                            dbc.Button("1 y", id = '1y-button',outline = True, color = 'dark', size="sm", className="mr-1"),
+                            dbc.Button("all", id = 'all-button',outline = True, color = 'dark', size="sm", className="mr-1")
                         ], className = "mt-5"
                     ),
                     dcc.Graph(
                         id='live_temp_graph',
-                        figure=build_figure(load_data()),
+                        #figure=build_figure(load_data()),
                         config={'displayModeBar': False}
                     ),
 #                    dcc.RangeSlider(
