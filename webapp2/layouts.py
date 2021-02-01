@@ -69,21 +69,22 @@ temp_graph = html.Div([
                         figure=build_figure(load_data()),
                         config={'displayModeBar': False}
                     ),
-                    dcc.RangeSlider(
-                        id='my-range-slider',
-                        min=0,
-                        max=20,
-                        step=0.5,
-                        value=[5, 15],
-                        className='ml-5 mr-5'
-                    )
+#                    dcc.RangeSlider(
+#                        id='my-range-slider',
+#                        min=0,
+#                        max=20,
+#                        step=0.5,
+#                        value=[5, 15],
+#                        className='ml-5 mr-5'
+#                    )
                 ]
             )
         )
     ], className="mt-sm-3 ml-sm-1 mr-sm-1"
 )])
 
-LAYOUT = html.Div(children=[
-    cards,
-    temp_graph
-])
+def serve_layout():
+    return html.Div(children=[
+        cards,
+        temp_graph
+    ])
