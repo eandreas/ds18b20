@@ -12,6 +12,12 @@ def npdt2dtdt(npdt):
 
 def update_xaxes(df, fig, n):
     n = min(len(df), n)
+    df_small = df[df.date_time >= df.date_time.values[-n]]
+    if len(df_small) >= 600:
+        nth = int(len(df_small) / 300)
+        df_small = df_small.iloc[::nth, :]
+    print(f'len(df_small)={len(df_small)}')
+    fig = build_figure(df_small)
     fig.update_layout(
         xaxis_range = [npdt2dtdt(df.date_time.values[-n]), npdt2dtdt(df.date_time.values[-1])]
     )
@@ -49,5 +55,7 @@ def register_callbacks(app, df, fig):
             return update_xaxes(df, fig, 30 * 24 * 60)
         elif '1y-button' in changed_id:
             return update_xaxes(df, fig, 365 * 24 * 60)
+        elif 'all-button' in changed_id:
+            return update_xaxes(df, fig, len(df))
         # FIXME - replace build_figure by update_axes
         return build_figure(df)
