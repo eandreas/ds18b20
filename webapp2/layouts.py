@@ -67,7 +67,7 @@ temp_graph = html.Div([
                     ),
                     dcc.Graph(
                         id='live_temp_graph',
-                        #figure=build_figure(load_data()),
+                        figure=build_figure(load_data()),
                         config={'displayModeBar': False}
                     ),
 #                    dcc.RangeSlider(
