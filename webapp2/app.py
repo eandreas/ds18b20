@@ -9,9 +9,9 @@ external_stylesheets = [dbc.themes.YETI]
 
 app = dash.Dash(__name__, external_stylesheets=external_stylesheets)
 
-app.layout = serve_layout
 df = load_data()
 fig = build_figure(df)
+app.layout = serve_layout
 register_callbacks(app, df, fig)
 
 if __name__ == '__main__':
