@@ -46,7 +46,8 @@ cards = html.Div([
     ], className="mt-3 ml-1 mr-1"
 )])
 
-temp_graph = html.Div([
+def get_temp_graph(df):
+    return html.Div([
     dbc.CardDeck([
         dbc.Card(
             dbc.CardBody(
@@ -67,7 +68,7 @@ temp_graph = html.Div([
                     ),
                     dcc.Graph(
                         id='live_temp_graph',
-                        figure=build_figure(load_data()),
+                        figure=build_figure(df),
                         config={'displayModeBar': False}
                     ),
 #                    dcc.RangeSlider(
@@ -82,10 +83,11 @@ temp_graph = html.Div([
             )
         )
     ], className="mt-sm-3 ml-sm-1 mr-sm-1"
-)])
+    )])
 
 def serve_layout():
+    df = load_data()
     return html.Div(children=[
         cards,
-        temp_graph
+        get_temp_graph(df)
     ])
