@@ -16,7 +16,6 @@ def update_xaxes(df, fig, n):
     if len(df_small) >= 600:
         nth = int(len(df_small) / 300)
         df_small = df_small.iloc[::nth, :]
-    print(f'len(df_small)={len(df_small)}')
     fig = build_figure(df_small)
     fig.update_layout(
         xaxis_range = [npdt2dtdt(df.date_time.values[-n]), npdt2dtdt(df.date_time.values[-1])]
