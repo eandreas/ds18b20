@@ -10,9 +10,10 @@ external_stylesheets = [dbc.themes.YETI]
 
 app = dash.Dash(__name__, external_stylesheets=external_stylesheets)
 
+df = load_data(caller='serve_layout')
+#register_callbacks(app, df)
+
 def serve_layout():
-    df = load_data(caller='serve_layout')
-    register_callbacks(app, df)
     return html.Div(children=[
         cards,
         get_temp_graph(df)
