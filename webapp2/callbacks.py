@@ -29,15 +29,17 @@ def register_callbacks(app, df):
     
     @app.callback(
         Output('live_temp_graph', 'figure'),
-        Input('1h-button', 'n_clicks'),
-        Input('3h-button', 'n_clicks'),
-        Input('6h-button', 'n_clicks'),
-        Input('12h-button', 'n_clicks'),
-        Input('1d-button', 'n_clicks'),
-        Input('7d-button', 'n_clicks'),
-        Input('30d-button', 'n_clicks'),
-        Input('1y-button', 'n_clicks'),
-        Input('all-button', 'n_clicks')
+        [
+            Input('1h-button', 'n_clicks'),
+            Input('3h-button', 'n_clicks'),
+            Input('6h-button', 'n_clicks'),
+            Input('12h-button', 'n_clicks'),
+            Input('1d-button', 'n_clicks'),
+            Input('7d-button', 'n_clicks'),
+            Input('30d-button', 'n_clicks'),
+            Input('1y-button', 'n_clicks'),
+            Input('all-button', 'n_clicks')
+        ]
     )
     def update_output(btn_1h, btn_3h, btn_6h, btn_12h, btn_1d, btn_7d, btn_30d, btn_1y, btn_all):
         changed_id = [p['prop_id'] for p in dash.callback_context.triggered][0]
