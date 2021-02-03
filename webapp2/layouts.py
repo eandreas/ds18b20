@@ -84,10 +84,4 @@ def get_temp_graph(df):
         )
     ], className="mt-sm-3 ml-sm-1 mr-sm-1"
     )])
-
-def serve_layout():
-    df = load_data()
-    return html.Div(children=[
-        cards,
-        get_temp_graph(df)
-    ])
+    
