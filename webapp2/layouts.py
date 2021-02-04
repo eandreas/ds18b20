@@ -2,8 +2,8 @@ import dash_html_components as html
 import dash_core_components as dcc
 import dash_bootstrap_components as dbc
 from dash.dependencies import Input, Output, State
-from dataloader import load_data
 from figures import build_figure
+from dataloader import DataProviderSingleton
 
 cards = html.Div([
     dbc.CardDeck([
@@ -11,7 +11,7 @@ cards = html.Div([
             dbc.CardBody(
                 [
                     html.H5("Aktuelle Temperatur", className="card-title"),
-                    html.H1("21.3 °C"),
+                    html.H1("-- °C"),
                     html.P(
                         "Messwert vom 31.01.2021 14:04",
                         className="card-text",
@@ -23,7 +23,7 @@ cards = html.Div([
             dbc.CardBody(
                 [
                     html.H5("Temperaturdurchschnitt", className="card-title"),
-                    html.H1("23.8 °C"),
+                    html.H1("-- °C"),
                     html.P(
                         "Zeitraum: 11:04 - 14:04",
                         className="card-text",
@@ -35,7 +35,7 @@ cards = html.Div([
             dbc.CardBody(
                 [
                     html.H5("Veränderung", className="card-title"),
-                    html.H1("sinkend"),
+                    html.H1("--"),
                     html.P(
                         "Die aktuelle Veränderung kann steigend, sinkend oder stabil sein",
                         className="card-text",
@@ -46,7 +46,7 @@ cards = html.Div([
     ], className="mt-3 ml-1 mr-1"
 )])
 
-def get_temp_graph(df):
+def get_temp_graph():
     return html.Div([
     dbc.CardDeck([
         dbc.Card(
@@ -68,7 +68,7 @@ def get_temp_graph(df):
                     ),
                     dcc.Graph(
                         id='live_temp_graph',
-                        figure=build_figure(df),
+                        figure=build_figure(DataProviderSingleton.getInstance().get_df()),
                         config={'displayModeBar': False}
                     ),
 #                    dcc.RangeSlider(

@@ -1,4 +1,5 @@
 import plotly.graph_objects as go
+from dataloader import DataProviderSingleton
 
 # -- MOVE TO UTIL ?
 import pandas as pd
