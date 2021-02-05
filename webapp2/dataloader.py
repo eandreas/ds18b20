@@ -100,8 +100,8 @@ class DataProviderSingleton:
         return self.__fig_all
 
     def load_data(self):
-        print('load_data called')
-        if not self.__DEFAULT_PI_PATH.is_file():
+        path = self.__DEFAULT_PI_PATH
+        if not path.is_file():
             path = self.__FALLBACK_PATH
         names = ['dev_sn', 'date', 'time', 'temp_raw', 'temp_C']
         self.__df_full = pd.read_csv(path, sep=' ', header=None, names = names, parse_dates=[['date', 'time']])

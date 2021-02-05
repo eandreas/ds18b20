@@ -11,7 +11,6 @@ app = dash.Dash(__name__, external_stylesheets=external_stylesheets)
 register_callbacks(app)
 
 def serve_layout():
-    print('serve_layout called')
     DataProviderSingleton.getInstance().load_data()
     return html.Div(children=[
         cards,
