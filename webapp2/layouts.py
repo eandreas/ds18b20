@@ -2,7 +2,6 @@ import dash_html_components as html
 import dash_core_components as dcc
 import dash_bootstrap_components as dbc
 from dash.dependencies import Input, Output, State
-from figures import build_figure
 from dataloader import DataProviderSingleton
 
 cards = html.Div([
@@ -68,17 +67,9 @@ def get_temp_graph():
                     ),
                     dcc.Graph(
                         id='live_temp_graph',
-                        figure=build_figure(DataProviderSingleton.getInstance().get_df()),
+                        figure=DataProviderSingleton.getInstance().get_fig_12h(),
                         config={'displayModeBar': False}
                     ),
-#                    dcc.RangeSlider(
-#                        id='my-range-slider',
-#                        min=0,
-#                        max=20,
-#                        step=0.5,
-#                        value=[5, 15],
-#                        className='ml-5 mr-5'
-#                    )
                 ]
             )
         )

@@ -2,8 +2,7 @@ import dash
 import dash_html_components as html
 import dash_bootstrap_components as dbc
 from layouts import cards, get_temp_graph
-from figures import build_figure
-from dataloader import DataProviderSingleton, load_data
+from dataloader import DataProviderSingleton
 from callbacks import register_callbacks
 
 external_stylesheets = [dbc.themes.YETI]
@@ -12,7 +11,8 @@ app = dash.Dash(__name__, external_stylesheets=external_stylesheets)
 register_callbacks(app)
 
 def serve_layout():
-    DataProviderSingleton.getInstance().set_df(load_data())
+    print('serve_layout called')
+    DataProviderSingleton.getInstance().load_data()
     return html.Div(children=[
         cards,
         get_temp_graph()
