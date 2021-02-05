@@ -128,3 +128,20 @@ class DataProviderSingleton:
         )
         return fig
     
+    def clear_figures(self):
+        self.__fig_1h = None
+        self.__fig_3h = None
+        self.__fig_6h = None
+        self.__fig_12h = None
+        self.__fig_1d = None
+        self.__fig_7d = None
+        self.__fig_30d = None
+        self.__fig_1y = None
+        self.__fig_all = None
+
+    def get_current_C(self):
+        return format(self.__df_full['temp_C'].values[-1], '.1f')
+
+    def get_current_datetime(self):
+        return pd.to_datetime(self.__df_full['date_time'].values[-1]).strftime('%d.%m.%Y, %H:%M Uhr')
+    

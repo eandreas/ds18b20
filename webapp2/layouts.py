@@ -3,16 +3,18 @@ import dash_core_components as dcc
 import dash_bootstrap_components as dbc
 from dash.dependencies import Input, Output, State
 from dataloader import DataProviderSingleton
+import pandas as pd
 
-cards = html.Div([
+def get_cards():
+    return html.Div([
     dbc.CardDeck([
         dbc.Card(
             dbc.CardBody(
                 [
                     html.H5("Aktuelle Temperatur", className="card-title"),
-                    html.H1("-- °C"),
+                    html.H1(f"{DataProviderSingleton.getInstance().get_current_C()} °C"),
                     html.P(
-                        "Messwert vom 31.01.2021 14:04",
+                        f"Messwert vom {DataProviderSingleton.getInstance().get_current_datetime()}",
                         className="card-text",
                     )
                 ]
