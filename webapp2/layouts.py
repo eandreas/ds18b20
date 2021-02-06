@@ -82,7 +82,7 @@ def get_temp_graph():
                     ),
                     dcc.Graph(
                         id='live_temp_graph',
-                        figure=DataProviderSingleton.getInstance().get_fig_1d(),
+                        figure=DataProviderSingleton.getInstance().get_fig('fig_3h'),
                         config={'displayModeBar': False}
                     ),
                 ]
@@ -99,7 +99,7 @@ def serve_layout():
         get_temp_graph(),
         dcc.Interval(
             id='interval-component',
-            interval = 60 * 1000, # in milliseconds
+            interval = 5 * 1000, # in milliseconds
             n_intervals = 0
         )
     ])

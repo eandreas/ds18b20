@@ -30,25 +30,43 @@ def register_callbacks(app):
             dps = DataProviderSingleton.getInstance()
             dps.load_data()
             dps.clear_figures()
-            return dps.get_fig_7d()
+            return dps.get_fig(DataProviderSingleton.getInstance().get_last_fig_id())
         elif input_id == '1h-button':
-            return DataProviderSingleton.getInstance().get_fig_1h()
+            fig_id = 'fig_1h'
+            DataProviderSingleton.getInstance().set_last_fig_id(fig_id)
+            return DataProviderSingleton.getInstance().get_fig(fig_id)
         elif input_id == '3h-button':
-            return DataProviderSingleton.getInstance().get_fig_3h()
+            fig_id = 'fig_3h'
+            DataProviderSingleton.getInstance().set_last_fig_id(fig_id)
+            return DataProviderSingleton.getInstance().get_fig(fig_id)
         elif input_id == '6h-button':
-            return DataProviderSingleton.getInstance().get_fig_6h()
+            fig_id = 'fig_6h'
+            DataProviderSingleton.getInstance().set_last_fig_id(fig_id)
+            return DataProviderSingleton.getInstance().get_fig(fig_id)
         elif input_id == '12h-button':
-            return DataProviderSingleton.getInstance().get_fig_12h()
+            fig_id = 'fig_12h'
+            DataProviderSingleton.getInstance().set_last_fig_id(fig_id)
+            return DataProviderSingleton.getInstance().get_fig(fig_id)
         elif input_id == '1d-button':
-            return DataProviderSingleton.getInstance().get_fig_1d()
+            fig_id = 'fig_12'
+            DataProviderSingleton.getInstance().set_last_fig_id(fig_id)
+            return DataProviderSingleton.getInstance().get_fig(fig_id)
         elif input_id == '7d-button':
-            return DataProviderSingleton.getInstance().get_fig_7d()
+            fig_id = 'fig_7d'
+            DataProviderSingleton.getInstance().set_last_fig_id(fig_id)
+            return DataProviderSingleton.getInstance().get_fig(fig_id)
         elif input_id == '30d-button':
-            return DataProviderSingleton.getInstance().get_fig_30d()
+            fig_id = 'fig_30d'
+            DataProviderSingleton.getInstance().set_last_fig_id(fig_id)
+            return DataProviderSingleton.getInstance().get_fig(fig_id)
         elif input_id == '1y-button':
-            return DataProviderSingleton.getInstance().get_fig_1y()
+            fig_id = 'fig_1y'
+            DataProviderSingleton.getInstance().set_last_fig_id(fig_id)
+            return DataProviderSingleton.getInstance().get_fig(fig_id)
         elif input_id == 'all-button':
-            return DataProviderSingleton.getInstance().get_fig_all()
+            fig_id = 'fig_all'
+            DataProviderSingleton.getInstance().set_last_fig_id(fig_id)
+            return DataProviderSingleton.getInstance().get_fig(fig_id)
         raise PreventUpdate
 
     @app.callback(

@@ -22,82 +22,46 @@ class DataProviderSingleton:
         else:
             DataProviderSingleton.__instance = self
             self.__df_full = None
-            self.__fig_1h = None
-            self.__fig_3h = None
-            self.__fig_6h = None
-            self.__fig_12h = None
-            self.__fig_1d = None
-            self.__fig_7d = None
-            self.__fig_30d = None
-            self.__fig_1y = None
-            self.__fig_all = None
-    
+            self.__figs = {}
+            self.__last_fig_id = 'fig_12h'
+            self.__n = {
+                'fig_1h': 60,
+                'fig_3h': 3 * 60,
+                'fig_6h': 6 * 60,
+                'fig_12h': 12 * 60,
+                'fig_1d': 24 * 60,
+                'fig_7d': 7 * 24 * 60,
+                'fig_30d': 30 * 24 * 60,
+                'fig_1y': 365 * 24 * 60
+            }
+
     def get_df(self):
         if self.__df_full is None:
             self.__df_full = self.load_data()
         return self.__df_full
+    
+    def get_last_fig_id(self):
+        return self.__last_fig_id
 
-    def get_fig_1h(self):
-        if self.__fig_1h is None:
-            n = min(len(self.__df_full), 60)
-            start = self.__df_full.date_time.values[-n]
-            self.__fig_1h = self.__serve_figure(self.__compress_df(start))
-        return self.__fig_1h
+    def set_last_fig_id(self, fig_id):
+        self.__last_fig_id = fig_id
     
-    def get_fig_3h(self):
-        if self.__fig_3h is None:
-            n = min(len(self.__df_full), 3 * 60)
-            start = self.__df_full.date_time.values[-n]
-            self.__fig_3h = self.__serve_figure(self.__compress_df(start))
-        return self.__fig_3h
-    
-    def get_fig_6h(self):
-        if self.__fig_6h is None:
-            n = min(len(self.__df_full), 6 * 60)
-            start = self.__df_full.date_time.values[-n]
-            self.__fig_6h = self.__serve_figure(self.__compress_df(start))
-        return self.__fig_6h
-    
-    def get_fig_12h(self):
-        if self.__fig_12h is None:
-            n = min(len(self.__df_full), 12 * 60)
-            start = self.__df_full.date_time.values[-n]
-            self.__fig_12h = self.__serve_figure(self.__compress_df(start))
-        return self.__fig_12h
-
-    def get_fig_1d(self):
-        if self.__fig_1d is None:
-            n = min(len(self.__df_full), 24 * 60)
-            start = self.__df_full.date_time.values[-n]
-            self.__fig_1d = self.__serve_figure(self.__compress_df(start))
-        return self.__fig_1d
-    
-    def get_fig_7d(self):
-        if self.__fig_7d is None:
-            n = min(len(self.__df_full), 7 * 24 * 60)
-            start = self.__df_full.date_time.values[-n]
-            self.__fig_7d = self.__serve_figure(self.__compress_df(start))
-        return self.__fig_7d
-    
-    def get_fig_30d(self):
-        if self.__fig_30d is None:
-            n = min(len(self.__df_full), 30 * 24 * 60)
-            start = self.__df_full.date_time.values[-n]
-            self.__fig_30d = self.__serve_figure(self.__compress_df(start))
-        return self.__fig_30d
-
-    def get_fig_1y(self):
-        if self.__fig_1y is None:
-            n = min(len(self.__df_full), 365 * 24 * 60)
-            start = self.__df_full.date_time.values[-n]
-            self.__fig_1y = self.__serve_figure(self.__compress_df(start))
-        return self.__fig_1y
+    def get_fig(self, fig_id):
+        if fig_id == 'fig_all':
+            return self.get_fig_all()
+        if fig_id in self.__figs:
+            return self.__figs[fig_id]
+        n = min(len(self.__df_full), self.__n[fig_id])
+        start = self.__df_full.date_time.values[-n]
+        self.__figs[fig_id] = self.__serve_figure(self.__compress_df(start))
+        return self.__figs[fig_id]
     
     def get_fig_all(self):
-        if self.__fig_all is None:
-            start = self.__df_full.date_time.values[0]
-            self.__fig_all = self.__serve_figure(self.__compress_df(start))
-        return self.__fig_all
+        if 'fig_all' in self.__figs:
+            return self.__figs['fig_all']
+        start = self.__df_full.date_time.values[0]
+        self.__figs['fig_all'] = self.__serve_figure(self.__compress_df(start))
+        return self.__figs['fig_all']
 
     def load_data(self):
         path = self.__DEFAULT_PI_PATH
@@ -129,15 +93,7 @@ class DataProviderSingleton:
         return fig
     
     def clear_figures(self):
-        self.__fig_1h = None
-        self.__fig_3h = None
-        self.__fig_6h = None
-        self.__fig_12h = None
-        self.__fig_1d = None
-        self.__fig_7d = None
-        self.__fig_30d = None
-        self.__fig_1y = None
-        self.__fig_all = None
+        self.__figs = {}
 
     def get_current_C(self):
         return format(self.__df_full['temp_C'].values[-1], '.1f')
