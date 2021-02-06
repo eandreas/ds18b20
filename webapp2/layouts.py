@@ -99,7 +99,7 @@ def serve_layout():
         get_temp_graph(),
         dcc.Interval(
             id='interval-component',
-            interval = 60 * 1000, # in milliseconds
+            interval = 2 * 1000, # in milliseconds
             n_intervals = 0
         )
     ])

@@ -6,7 +6,6 @@ from dataloader import DataProviderSingleton
 
 def register_callbacks(app):
     
-    """
     @app.callback(
         Output('live_temp_graph', 'figure'),
         Input('1h-button', 'n_clicks'),
@@ -40,7 +39,6 @@ def register_callbacks(app):
         elif 'all-button' in changed_id and btn_all is not None:
             return DataProviderSingleton.getInstance().get_fig_all()
         raise PreventUpdate
-    """
 
     @app.callback(
         Output('current-temp-text', 'children'),
@@ -48,7 +46,7 @@ def register_callbacks(app):
         Output('live_temp_graph', 'figure'),
         Input('interval-component', 'n_intervals')
     )
-    def update_metrics(n):
+    def update_cards(n):
         dps = DataProviderSingleton.getInstance()
         dps.load_data()
         ctt = f'{dps.get_current_C()} °C'
