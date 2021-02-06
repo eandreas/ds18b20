@@ -14,8 +14,11 @@ def get_cards():
                     html.H5("Aktuelle Temperatur", className="card-title"),
                     html.H1(f"{DataProviderSingleton.getInstance().get_current_C()} °C"),
                     html.P(
-                        f"Messwert vom {DataProviderSingleton.getInstance().get_current_datetime()}",
-                        className="card-text",
+                        [
+                            "Messwert vom:",
+                            html.Br(),
+                            DataProviderSingleton.getInstance().get_latest_datetime().strftime('%d.%m.%Y, %H:%M Uhr')
+                        ], className="card-text"
                     )
                 ]
             )

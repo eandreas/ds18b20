@@ -142,6 +142,6 @@ class DataProviderSingleton:
     def get_current_C(self):
         return format(self.__df_full['temp_C'].values[-1], '.1f')
 
-    def get_current_datetime(self):
-        return pd.to_datetime(self.__df_full['date_time'].values[-1]).strftime('%d.%m.%Y, %H:%M Uhr')
+    def get_latest_datetime(self, n = 1):
+        return pd.to_datetime(self.__df_full['date_time'].values[-n])
     
