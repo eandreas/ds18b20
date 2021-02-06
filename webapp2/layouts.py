@@ -29,8 +29,11 @@ def get_cards():
                     html.H5("Temperaturdurchschnitt", className="card-title"),
                     html.H1("-- °C"),
                     html.P(
-                        "Zeitraum: 11:04 - 14:04",
-                        className="card-text",
+                        [
+                            "Berücksichtigter Zeitraum:",
+                            html.Br(),
+                            "--",
+                        ], className="card-text"
                     )
                 ]
             )
