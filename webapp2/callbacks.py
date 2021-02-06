@@ -6,6 +6,7 @@ from dataloader import DataProviderSingleton
 
 def register_callbacks(app):
     
+    """
     @app.callback(
         Output('live_temp_graph', 'figure'),
         Input('1h-button', 'n_clicks'),
@@ -39,6 +40,7 @@ def register_callbacks(app):
         elif 'all-button' in changed_id and btn_all is not None:
             return DataProviderSingleton.getInstance().get_fig_all()
         raise PreventUpdate
+    """
 
     @app.callback(
         Output('current-temp-text', 'children'),
