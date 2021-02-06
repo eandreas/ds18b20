@@ -74,7 +74,7 @@ class DataProviderSingleton:
         df = self.__df_full[self.__df_full.date_time >= start]
         if len(df) >= 2 * res:
             n = int(len(df) / res)
-            df = df.iloc[::n, :]
+            df = df.iloc[::-n]
         return df
     
     def __serve_figure(self, df):

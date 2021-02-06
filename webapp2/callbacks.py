@@ -48,7 +48,7 @@ def register_callbacks(app):
             DataProviderSingleton.getInstance().set_last_fig_id(fig_id)
             return DataProviderSingleton.getInstance().get_fig(fig_id)
         elif input_id == '1d-button':
-            fig_id = 'fig_12'
+            fig_id = 'fig_1d'
             DataProviderSingleton.getInstance().set_last_fig_id(fig_id)
             return DataProviderSingleton.getInstance().get_fig(fig_id)
         elif input_id == '7d-button':
