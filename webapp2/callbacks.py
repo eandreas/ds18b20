@@ -1,5 +1,6 @@
 import dash
 from dash.dependencies import Output, Input, State
+from dash.exceptions import PreventUpdate
 from dataloader import DataProviderSingleton
 
 # -- MOVE TO UTIL ?
@@ -25,22 +26,22 @@ def register_callbacks(app):
     )
     def update_output(btn_1h, btn_3h, btn_6h, btn_12h, btn_1d, btn_7d, btn_30d, btn_1y, btn_all):
         changed_id = [p['prop_id'] for p in dash.callback_context.triggered][0]
-        if '1h-button' in changed_id:
+        if '1h-button' in changed_id and btn_1h is not None:
             return DataProviderSingleton.getInstance().get_fig_1h()
-        elif '3h-button' in changed_id:
+        elif '3h-button' in changed_id and btn_3h is not None:
             return DataProviderSingleton.getInstance().get_fig_3h()
-        elif '6h-button' in changed_id:
+        elif '6h-button' in changed_id and btn_6h is not None:
             return DataProviderSingleton.getInstance().get_fig_6h()
-        elif '12h-button' in changed_id:
+        elif '12h-button' in changed_id and btn_12h is not None:
             return DataProviderSingleton.getInstance().get_fig_12h()
-        elif '1d-button' in changed_id:
+        elif '1d-button' in changed_id and btn_1d is not None:
             return DataProviderSingleton.getInstance().get_fig_1d()
-        elif '7d-button' in changed_id:
+        elif '7d-button' in changed_id  and btn_7d is not None:
             return DataProviderSingleton.getInstance().get_fig_7d()
-        elif '30d-button' in changed_id:
+        elif '30d-button' in changed_id and btn_30d is not None:
             return DataProviderSingleton.getInstance().get_fig_30d()
-        elif '1y-button' in changed_id:
+        elif '1y-button' in changed_id and btn_1y is not None:
             return DataProviderSingleton.getInstance().get_fig_1y()
-        elif 'all-button' in changed_id:
+        elif 'all-button' in changed_id and btn_all is not None:
             return DataProviderSingleton.getInstance().get_fig_all()
-        return DataProviderSingleton.getInstance().get_fig_all()
+        raise PreventUpdate

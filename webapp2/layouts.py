@@ -69,7 +69,7 @@ def get_temp_graph():
                     ),
                     dcc.Graph(
                         id='live_temp_graph',
-                        figure=DataProviderSingleton.getInstance().get_fig_12h(),
+                        figure=DataProviderSingleton.getInstance().get_fig_1d(),
                         config={'displayModeBar': False}
                     ),
                 ]
