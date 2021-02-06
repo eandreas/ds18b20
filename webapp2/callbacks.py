@@ -43,6 +43,7 @@ def register_callbacks(app):
     @app.callback(
         Output('current-temp-text', 'children'),
         Output('current-temp-datetime', 'children'),
+        Output('live_temp_graph', 'figure'),
         Input('interval-component', 'n_intervals')
     )
     def update_metrics(n):
@@ -54,5 +55,7 @@ def register_callbacks(app):
             html.Br(),
             dps.get_latest_datetime().strftime('%d.%m.%Y, %H:%M Uhr')
         ]
-        return ctt, ctd
+        dps.clear_figures()
+        fig = dps.get_fig_1d()
+        return ctt, ctd, fig
 
