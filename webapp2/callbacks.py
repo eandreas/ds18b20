@@ -74,7 +74,7 @@ def register_callbacks(app):
         Output('current-temp-datetime', 'children'),
         Input('interval-component', 'n_intervals')
     )
-    def update_cards(n):
+    def update_current_card(n):
         dps = DataProviderSingleton.getInstance()
         dps.load_data()
         ctt = f'{dps.get_current_C()} °C'
@@ -84,4 +84,30 @@ def register_callbacks(app):
             dps.get_latest_datetime().strftime('%d.%m.%Y, %H:%M Uhr')
         ]
         return ctt, ctd
-
+    
+    @app.callback(
+        Output('average-temp-text', 'children'),
+        Output('average-temp-datetime', 'children'),
+        Output('temp-tendency-text', 'children'),
+        Input('live_temp_graph', 'figure'),
+    )
+    def update_average_card(fig):
+        dps  = DataProviderSingleton.getInstance()
+        temp, start, end = dps.get_average_C(dps.get_last_fig_id())
+        temp = format(temp, '.1f')
+        att = f'{temp} °C'
+        #print(f'callback: start.date={start.date()}, end.date={end.date()}')
+        if start.date() == end.date():
+            atd = [
+                "Berücksichtigter Zeitraum:",
+                html.Br(),
+                start.strftime('%d.%m.%Y, %H:%M') + ' - ' + end.strftime('%H:%M Uhr')
+            ]
+        else:
+            atd = [
+                "Berücksichtigter Zeitraum:",
+                html.Br(),
+                start.strftime('%d.%m. %H:%M Uhr') + ' - ' + end.strftime('%d.%m. %H:%M Uhr')
+            ]
+        ttt = dps.get_tendency()
+        return att, atd, ttt

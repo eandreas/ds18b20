@@ -100,4 +100,23 @@ class DataProviderSingleton:
 
     def get_latest_datetime(self, n = 1):
         return pd.to_datetime(self.__df_full['date_time'].values[-n])
+
+    def get_average_C(self, fig_id):
+        n = min(len(self.__df_full), self.__n[fig_id])
+        start = pd.to_datetime(self.__df_full.date_time.values[-n])
+        df = self.__df_full[self.__df_full.date_time >= start]
+        #print(f'len(self.__df_full)={len(self.__df_full)}, len(df)={len(df)}')
+        end = pd.to_datetime(self.__df_full.date_time.values[-1])
+        #print(f'get_average: start.date={start.date()}, end.date={end.date()}')
+        return df['temp_C'].mean(), start, end
+
+    def get_tendency(self, delta = 0.02):
+        ct = self.__df_full['temp_C'].values[-1]
+        at = self.__df_full.tail(5).head(4)['temp_C'].mean()
+        if ct > (at + delta):
+            return "steigend"
+        elif ct < (at - delta):
+            return "sinkend"
+        else:
+            return "stabil"
     

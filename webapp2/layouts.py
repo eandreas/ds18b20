@@ -29,13 +29,15 @@ def get_cards():
             dbc.CardBody(
                 [
                     html.H5("Temperaturdurchschnitt", className="card-title"),
-                    html.H1("-- °C"),
+                    html.H1(id = 'average-temp-text'),
                     html.P(
                         [
                             "Berücksichtigter Zeitraum:",
                             html.Br(),
                             "--",
-                        ], className="card-text"
+                        ],
+                        id = 'average-temp-datetime',
+                        className="card-text"
                     )
                 ]
             )
@@ -44,7 +46,7 @@ def get_cards():
             dbc.CardBody(
                 [
                     html.H5("Veränderung", className="card-title"),
-                    html.H1("--"),
+                    html.H1(id = 'temp-tendency-text'),
                     html.P(
                         "Die aktuelle Veränderung kann steigend, sinkend oder stabil sein",
                         className="card-text",
@@ -52,11 +54,6 @@ def get_cards():
                 ]
             )
         ),
-        #dcc.Interval(
-        #    id='interval-component',
-        #    interval = 60 * 1000, # in milliseconds
-        #    n_intervals = 0
-        #)
     ], className="mt-3 ml-1 mr-1"
 )])
 
