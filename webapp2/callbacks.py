@@ -1,14 +1,8 @@
 import dash
 from dash.dependencies import Output, Input, State
 from dash.exceptions import PreventUpdate
+import dash_html_components as html
 from dataloader import DataProviderSingleton
-
-# -- MOVE TO UTIL ?
-import pandas as pd
-
-def npdt2dtdt(npdt):
-    return pd.Timestamp(npdt).to_pydatetime()
-# -- end of MOVE TO UTIL
 
 def register_callbacks(app):
     
@@ -45,3 +39,20 @@ def register_callbacks(app):
         elif 'all-button' in changed_id and btn_all is not None:
             return DataProviderSingleton.getInstance().get_fig_all()
         raise PreventUpdate
+
+    @app.callback(
+        Output('current-temp-text', 'children'),
+        Output('current-temp-datetime', 'children'),
+        Input('interval-component', 'n_intervals')
+    )
+    def update_metrics(n):
+        dps = DataProviderSingleton.getInstance()
+        dps.load_data()
+        ctt = f'{dps.get_current_C()} °C'
+        ctd = [
+            "Messwert vom:",
+            html.Br(),
+            dps.get_latest_datetime().strftime('%d.%m.%Y, %H:%M Uhr')
+        ]
+        return ctt, ctd
+

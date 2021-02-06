@@ -12,13 +12,15 @@ def get_cards():
             dbc.CardBody(
                 [
                     html.H5("Aktuelle Temperatur", className="card-title"),
-                    html.H1(f"{DataProviderSingleton.getInstance().get_current_C()} °C"),
+                    html.H1(id = 'current-temp-text'),
                     html.P(
                         [
                             "Messwert vom:",
                             html.Br(),
                             DataProviderSingleton.getInstance().get_latest_datetime().strftime('%d.%m.%Y, %H:%M Uhr')
-                        ], className="card-text"
+                        ],
+                        id = 'current-temp-datetime',
+                        className="card-text"
                     )
                 ]
             )
@@ -49,7 +51,12 @@ def get_cards():
                     )
                 ]
             )
-        )
+        ),
+        #dcc.Interval(
+        #    id='interval-component',
+        #    interval = 60 * 1000, # in milliseconds
+        #    n_intervals = 0
+        #)
     ], className="mt-3 ml-1 mr-1"
 )])
 
@@ -83,4 +90,17 @@ def get_temp_graph():
         )
     ], className="mt-sm-3 ml-sm-1 mr-sm-1"
     )])
+
+def serve_layout():
+    DataProviderSingleton.getInstance().clear_figures()
+    DataProviderSingleton.getInstance().load_data()
+    return html.Div(children=[
+        get_cards(),
+        get_temp_graph(),
+        dcc.Interval(
+            id='interval-component',
+            interval = 60 * 1000, # in milliseconds
+            n_intervals = 0
+        )
+    ])
     
