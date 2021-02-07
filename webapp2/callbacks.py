@@ -21,8 +21,8 @@ def register_callbacks(app):
     )
     def update_figure(btn_1h, btn_3h, btn_6h, btn_12h, btn_1d, btn_7d, btn_30d, btn_1y, btn_all, n):
         ctx = dash.callback_context
-        if not ctx.triggered:
-            raise PreventUpdate
+        #if not ctx.triggered:
+        #    raise PreventUpdate
         input_id = ctx.triggered[0]["prop_id"].split(".")[0]
         #print(f'triggered={input_id}')
         changed_id = [p['prop_id'] for p in dash.callback_context.triggered][0]
@@ -67,7 +67,9 @@ def register_callbacks(app):
             fig_id = 'fig_all'
             DataProviderSingleton.getInstance().set_last_fig_id(fig_id)
             return DataProviderSingleton.getInstance().get_fig(fig_id)
-        raise PreventUpdate
+        fig_id = DataProviderSingleton.getInstance().get_last_fig_id()
+        DataProviderSingleton.getInstance().set_last_fig_id(fig_id)
+        return DataProviderSingleton.getInstance().get_fig(fig_id)
 
     @app.callback(
         Output('current-temp-text', 'children'),

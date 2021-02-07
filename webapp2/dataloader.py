@@ -110,7 +110,7 @@ class DataProviderSingleton:
         #print(f'get_average: start.date={start.date()}, end.date={end.date()}')
         return df['temp_C'].mean(), start, end
 
-    def get_tendency(self, delta = 0.02):
+    def get_tendency(self, delta = 0.035):
         ct = self.__df_full['temp_C'].values[-1]
         at = self.__df_full.tail(5).head(4)['temp_C'].mean()
         if ct > (at + delta):
