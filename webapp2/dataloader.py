@@ -79,8 +79,18 @@ class DataProviderSingleton:
     
     def __serve_figure(self, df):
         fig = go.Figure()
-        fig.add_trace(go.Scatter(x=list(df.date_time), y=list(df.temp_C), name='t_corr'))
-        fig.add_trace(go.Scatter(x=list(df.date_time), y=list(df.temp_raw), name='t_raw'))
+        fig.add_trace(go.Scatter(
+            x=list(df.date_time),
+            y=list(df.temp_C),
+            name='t_corr',
+            line=dict(color='skyblue', width=3, dash='solid')
+        ))
+        fig.add_trace(go.Scatter(
+            x=list(df.date_time),
+            y=list(df.temp_raw),
+            name='t_raw',
+            line=dict(color='darkgray', width=1, dash='dot')
+        ))
         fig.update_layout(
             xaxis_title="Datum",
             yaxis_title="Temperatur / °C",
@@ -110,12 +120,13 @@ class DataProviderSingleton:
         #print(f'get_average: start.date={start.date()}, end.date={end.date()}')
         return df['temp_C'].mean(), start, end
 
-    def get_tendency(self, delta = 0.05):
+    def get_tendency(self, delta = 0.025):
         ct = self.__df_full['temp_C'].values[-1]
+        pt = self.__df_full.tail(2).head(1)['temp_C'].values[-1]
         at = self.__df_full.tail(5).head(4)['temp_C'].mean()
-        if ct > (at + delta):
+        if ct > pt + 0.1 or ct > (at + delta):
             return "steigend"
-        elif ct < (at - delta):
+        elif ct < pt - 0.1  or ct < (at - delta):
             return "sinkend"
         else:
             return "stabil"
