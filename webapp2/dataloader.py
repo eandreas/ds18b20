@@ -120,13 +120,13 @@ class DataProviderSingleton:
         #print(f'get_average: start.date={start.date()}, end.date={end.date()}')
         return df['temp_C'].mean(), start, end
 
-    def get_tendency(self, delta = 0.025):
+    def get_tendency(self, delta_prev = 0.1, delta_mean = 0.06):
         ct = self.__df_full['temp_C'].values[-1]
         pt = self.__df_full.tail(2).head(1)['temp_C'].values[-1]
         at = self.__df_full.tail(5).head(4)['temp_C'].mean()
-        if ct > pt + 0.1 or ct > (at + delta):
+        if ct > pt + delta_prev or ct > (at + delta_mean):
             return "steigend"
-        elif ct < pt - 0.1  or ct < (at - delta):
+        elif ct < pt - delta_prev  or ct < (at - delta_mean):
             return "sinkend"
         else:
             return "stabil"
