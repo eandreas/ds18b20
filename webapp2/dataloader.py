@@ -68,7 +68,17 @@ class DataProviderSingleton:
         if not path.is_file():
             path = self.__FALLBACK_PATH
         names = ['dev_sn', 'date', 'time', 'temp_raw', 'temp_C']
-        self.__df_full = pd.read_csv(path, sep=' ', header=None, names = names, parse_dates=[['date', 'time']])
+        df = pd.read_csv(path, sep=' ', header=None, names = names, parse_dates=[['date', 'time']])
+        df.date_time = df.date_time.dt.strftime('%Y-%m-%d %H:%M')
+        df.date_time = pd.to_datetime(df['date_time'], format='%Y%m%d %H:%M')
+        df = df[~df.isna().any(axis=1)]
+        df = df[~df.date_time.duplicated(keep='first')]
+        idx = pd.date_range(
+            start=df.iloc[0].date_time.strftime('%Y-%m-%d %H:%M'),
+            end=df.iloc[-1].date_time.strftime('%Y-%m-%d %H:%M'),
+            freq='T')
+        df = df.set_index('date_time').reindex(idx).rename_axis('date_time').reset_index()
+        self.__df_full = df
     
     def __compress_df(self, start, res = 200):
         df = self.__df_full[self.__df_full.date_time >= start]
