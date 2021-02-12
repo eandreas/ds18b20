@@ -22,7 +22,7 @@ ref_low = 0.01
 ref_high = 98.7
 
 # set calibration
-device.set_calibration(raw_low, raw_high, ref_low, ref_high)
+device.set_calibration('28-03219779d857', raw_low, raw_high, ref_low, ref_high)
 
 temps = device.get_temps()
 
@@ -33,6 +33,6 @@ for dp in temps:
 
 ```
 
-    28-03219779d857 2021-01-29 23:49:12.147129 21.959
-    28-03219779d339 2021-01-29 23:49:12.147227 22.183
+    28-03219779d857 2021-02-12 22:59:31.185111 21.959
+    28-03219779d339 2021-02-12 22:59:31.185220 20.750
 

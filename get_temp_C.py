@@ -9,7 +9,7 @@ ref_low = 0.01
 ref_high = 98.7
 
 # set calibration
-device.set_calibration(raw_low, raw_high, ref_low, ref_high)
+device.set_calibration('28-03219779d339', raw_low, raw_high, ref_low, ref_high)
 
 # get current temperature from all available devices
 temps = device.get_temps()
