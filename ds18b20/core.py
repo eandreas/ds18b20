@@ -57,11 +57,11 @@ class Device:
         self.__raw_low = None
         self.__ref_low = None
         self.__f_corr = None
+        self.__cal = {}
 
-    def set_calibration(self, raw_low, raw_high, ref_low, ref_high):
-        self.__raw_low = raw_low
-        self.__ref_low = ref_low
-        self.__f_corr = (ref_high - ref_low) / (raw_high - raw_low)
+    def set_calibration(self, sn, raw_low, raw_high, ref_low, ref_high):
+        f_corr = (ref_high - ref_low) / (raw_high - raw_low)
+        self.__cal.update({sn:(raw_low, ref_low, f_corr)})
 
     def __read_raw(self, device_file):
         with open(device_file, 'r') as f:
@@ -85,8 +85,9 @@ class Device:
                 date_time = dt.datetime.now()
                 t_raw = float(rows[1][pos + 2:])
                 t_corr = t_raw
-                if self.__f_corr is not None:
-                    t_corr = ((t_raw / 1000.0 - self.__raw_low) * self.__f_corr + self.__ref_low) * 1000.0
+                sn = self.__device_sn(df)
+                if sn in self.__cal:
+                    t_corr = ((t_raw / 1000.0 - self.__cal[sn][0]) * self.__cal[sn][2] + self.__cal[sn][1]) * 1000.0
                 data_point = DataPoint(device_sn, date_time, t_raw, t_corr)
                 temps.append(data_point)
         return temps
