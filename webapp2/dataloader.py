@@ -69,6 +69,11 @@ class DataProviderSingleton:
             path = self.__FALLBACK_PATH
         names = ['dev_sn', 'date', 'time', 'temp_raw', 'temp_C']
         df = pd.read_csv(path, sep=' ', header=None, names = names, parse_dates=[['date', 'time']])
+
+        # FIXME - make it work for two sensors
+        df = df[df.dev_sn == '28-03219779d339']
+        #df = df[df.dev_sn == '28-032197791b3c']
+        
         df.date_time = df.date_time.dt.strftime('%Y-%m-%d %H:%M')
         df.date_time = pd.to_datetime(df['date_time'], format='%Y%m%d %H:%M')
         df = df[~df.isna().any(axis=1)]
