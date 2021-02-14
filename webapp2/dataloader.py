@@ -98,7 +98,8 @@ class DataProviderSingleton:
             x=list(df.date_time),
             y=list(df.temp_C),
             name='t_corr',
-            line=dict(color='skyblue', width=3, dash='solid')
+            line=dict(color='skyblue', width=2, dash='solid'),
+            fill='tozeroy',
         ))
         fig.add_trace(go.Scatter(
             x=list(df.date_time),
