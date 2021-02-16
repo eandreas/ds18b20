@@ -21,7 +21,8 @@ def get_cards():
                         [
                             "Messwert vom:",
                             html.Br(),
-                            DataProviderSingleton.getInstance().get_latest_datetime().strftime('%d.%m.%Y, %H:%M Uhr')
+                            #DataProviderSingleton.getInstance().get_latest_datetime().strftime('%d.%m.%Y, %H:%M Uhr')
+                            '--'
                         ],
                         id = 'current-temp-datetime',
                         className="card-text"

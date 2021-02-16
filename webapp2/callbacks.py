@@ -87,7 +87,7 @@ def register_callbacks(app):
         ]
         return ctt, ctd
     
-    @app.callback(
+    """@app.callback(
         Output('average-temp-text', 'children'),
         Output('average-temp-datetime', 'children'),
         Output('temp-tendency-text', 'children'),
@@ -112,4 +112,4 @@ def register_callbacks(app):
                 start.strftime('%d.%m. %H:%M Uhr') + ' - ' + end.strftime('%d.%m. %H:%M Uhr')
             ]
         ttt = dps.get_tendency()
-        return att, atd, ttt
+        return att, atd, ttt """

@@ -1,6 +1,8 @@
 from pathlib2 import Path
 import pandas as pd
 import plotly.graph_objects as go
+from constants import graph_colors as gc
+import numpy as np
 
 class DataProviderSingleton:
 
@@ -21,7 +23,7 @@ class DataProviderSingleton:
             raise Exception("This class is a singleton!")
         else:
             DataProviderSingleton.__instance = self
-            self.__df_full = None
+            self.__dfs = None
             self.__figs = {}
             self.__last_fig_id = 'fig_12h'
             self.__n = {
@@ -35,10 +37,10 @@ class DataProviderSingleton:
                 'fig_1y': 365 * 24 * 60
             }
 
-    def get_df(self):
-        if self.__df_full is None:
-            self.__df_full = self.load_data()
-        return self.__df_full
+    def get_dfs(self):
+        if self.__dfs is None:
+            self.load_data()
+        return self.__dfs
     
     def get_last_fig_id(self):
         return self.__last_fig_id
@@ -51,16 +53,17 @@ class DataProviderSingleton:
             return self.get_fig_all()
         if fig_id in self.__figs:
             return self.__figs[fig_id]
-        n = min(len(self.__df_full), self.__n[fig_id])
-        start = self.__df_full.date_time.values[-n]
-        self.__figs[fig_id] = self.__serve_figure(self.__compress_df(start))
+        sn0 = list(self.__dfs.keys())[0]
+        n = min(len(self.__dfs[sn0]), self.__n[fig_id])
+        start = self.__dfs[sn0].date_time.values[-n]
+        self.__figs[fig_id] = self.__serve_figure(start)
         return self.__figs[fig_id]
     
     def get_fig_all(self):
         if 'fig_all' in self.__figs:
             return self.__figs['fig_all']
         start = self.__df_full.date_time.values[0]
-        self.__figs['fig_all'] = self.__serve_figure(self.__compress_df(start))
+        self.__figs['fig_all'] = self.__serve_figure(start)
         return self.__figs['fig_all']
 
     def load_data(self):
@@ -69,63 +72,97 @@ class DataProviderSingleton:
             path = self.__FALLBACK_PATH
         names = ['dev_sn', 'date', 'time', 'temp_raw', 'temp_C']
         df = pd.read_csv(path, sep=' ', header=None, names = names, parse_dates=[['date', 'time']])
-
-        # FIXME - make it work for two sensors
-        df = df[df.dev_sn == '28-03219779d339']
-        #df = df[df.dev_sn == '28-032197791b3c']
         
+        # keep only rows witout nan entries
+        df = df[~df.isna().any(axis=1)]
+        # keep only dates, hours, and minutes from date_time column
         df.date_time = df.date_time.dt.strftime('%Y-%m-%d %H:%M')
         df.date_time = pd.to_datetime(df['date_time'], format='%Y%m%d %H:%M')
-        df = df[~df.isna().any(axis=1)]
-        df = df[~df.date_time.duplicated(keep='first')]
+
         idx = pd.date_range(
-            start=df.iloc[0].date_time.strftime('%Y-%m-%d %H:%M'),
-            end=df.iloc[-1].date_time.strftime('%Y-%m-%d %H:%M'),
-            freq='T')
-        df = df.set_index('date_time').reindex(idx).rename_axis('date_time').reset_index()
-        self.__df_full = df
+            start = df.date_time.min().strftime('%Y-%m-%d %H:%M'),
+            end = df.date_time.max().strftime('%Y-%m-%d %H:%M'),
+            freq = 'T'
+        )
     
-    def __compress_df(self, start, res = 200):
-        df = self.__df_full[self.__df_full.date_time >= start]
+        dfs = {}
+    
+        for sn in df[df.temp_raw.notna()].dev_sn.unique():
+            # create a copy for each device / serial number
+            dfd = df[df.dev_sn == sn].copy()
+            # reset index due to skipped rows (different serial number)
+            dfd = dfd.reset_index(drop = True)
+            # remov duplicate rows for the same time stamp
+            dfd = dfd[~dfd.date_time.duplicated(keep='first')]
+            # fill gaps in case of missing measured data points, use df to do ut everywhere the same way
+            dfd = dfd.set_index('date_time').reindex(idx).rename_axis('date_time').reset_index()
+            # store within dictionary
+            dfs.update({sn: dfd})
+        self.__dfs = dfs
+    
+    def __compress_df(self, df, start, res = 200):
+        df = df[df.date_time >= start]
         if len(df) >= 2 * res:
             n = int(len(df) / res)
             df = df.iloc[::-n]
         return df
     
-    def __serve_figure(self, df):
+    def __serve_figure(self, start):
         fig = go.Figure()
-        fig.add_trace(go.Scatter(
-            x=list(df.date_time),
-            y=list(df.temp_C),
-            name='t_corr',
-            line=dict(color='skyblue', width=2, dash='solid'),
-            #fill='tozeroy',
-        ))
-        fig.add_trace(go.Scatter(
-            x=list(df.date_time),
-            y=list(df.temp_raw),
-            name='t_raw',
-            line=dict(color='darkgray', width=1, dash='dot')
-        ))
-        fig.update_layout(
-            xaxis_title="Datum",
-            yaxis_title="Temperatur / °C",
-            template='none',
-            margin = dict(
-                t = 10,
-                pad=4
-            ),
-        )
+        i = 0
+        for sn in self.__dfs.keys():
+            df = self.__compress_df(self.__dfs[sn], start)
+            fig.add_trace(go.Scatter(
+                x=list(df.date_time),
+                y=list(df.temp_C),
+                name=sn,
+                #line=dict(color='skyblue', width=2, dash='solid'),
+                line=dict(color=gc[i], width=2, dash='solid'),
+                #fill='tozeroy',
+            ))
+            #fig.add_trace(go.Scatter(
+            #    x=list(df.date_time),
+            #    y=list(df.temp_raw),
+            #    name='t_raw',
+            #    line=dict(color='darkgray', width=1, dash='dot')
+            #))
+            fig.update_layout(
+                xaxis_title="Datum",
+                yaxis_title="Temperatur / °C",
+                template='none',
+                #autosize=False,
+                #width=1000,
+                #height=500,
+                margin = dict(
+                    l = 80,
+                    r = 10,
+                    b = 0,
+                    t = 0,
+                    pad = 4
+                ),
+                legend = dict(
+                    orientation = "h",
+                    yanchor = "bottom",
+                    y = -0.3,
+                    xanchor = "right",
+                    x = 1.0
+                )
+            )
+            i += 1
         return fig
     
     def clear_figures(self):
         self.__figs = {}
 
     def get_current_C(self):
-        return format(self.__df_full['temp_C'].values[-1], '.1f')
+        t = list()
+        for sn in self.__dfs.keys():
+            t.append(self.__dfs[sn]['temp_C'].values[-1])
+        return format(np.array(t, np.float).mean(), '.1f')
 
     def get_latest_datetime(self, n = 1):
-        return pd.to_datetime(self.__df_full['date_time'].values[-n])
+        sn = list(self.__dfs.keys())[0]
+        return pd.to_datetime(self.__dfs[sn]['date_time'].values[-n])
 
     def get_average_C(self, fig_id):
         n = min(len(self.__df_full), self.__n[fig_id])
