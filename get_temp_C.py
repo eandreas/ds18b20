@@ -3,13 +3,12 @@ from ds18b20.core import *
 device = Device()
 
 # values from calibration
-raw_low = -1.563
-raw_high = 97.75
 ref_low = 0.01
 ref_high = 98.7
 
 # set calibration
-device.set_calibration('28-03219779d339', raw_low, raw_high, ref_low, ref_high)
+device.set_calibration('28-03219779d339', -0.781, 97.1663333, ref_low, ref_high)
+device.set_calibration('28-032197791b3c', -1.5583125, 96.4163333, ref_low, ref_high)
 
 # get current temperature from all available devices
 temps = device.get_temps()
