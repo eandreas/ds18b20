@@ -137,7 +137,7 @@ class DataProviderSingleton:
                     l = 80,
                     r = 10,
                     b = 0,
-                    t = 0,
+                    t = 20,
                     pad = 4
                 ),
                 legend = dict(
