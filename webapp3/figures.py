@@ -58,8 +58,8 @@ def get_figure(x, y, n, sz1, sz2, cs, cmin, cmax, convert_ts=False):
     add_trace(fig, x, y, sz2, cs, cmin, cmax, sl=False)
     fig.update_layout(
         autosize=True,
-        # width=200,
-        # height=100,
+        #width=100,
+        height=300,
         margin=dict(
             l=0,
             r=0,
@@ -78,9 +78,9 @@ def serve_figure():
     x = np.arange(10)
     fig = go.Figure(data=go.Scatter(x=x, y=x**2, mode='lines', line=dict(color='rgba(226, 240, 237, 0.5)', width=5)))
     fig.update_layout(
-        autosize=True,
+        autosize=False,
         # width=200,
-        # height=100,
+        height=100,
         margin=dict(
             l=0,
             r=0,

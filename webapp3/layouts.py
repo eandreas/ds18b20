@@ -15,7 +15,7 @@ df = load_data()['28-032197791b3c']
 df2 = df.iloc[::-60].copy()
 x = df2.timestamp.values
 y = df2.temp_C.values
-fig = get_figure(x, y, 3000, 5, 5, CS, 19, 24, convert_ts=True)
+fig = get_figure(x, y, 5000, 5, 5, CS, 19, 24, convert_ts=True)
 
 
 card_content_1 = [
@@ -94,7 +94,12 @@ def serve_layout():
                             dbc.Card(
                                 dbc.CardBody(
                                     children=[
-                                        dcc.Graph(figure = fig)
+                                        dcc.Graph(
+                                            figure = fig,
+                                            config={
+                                                'displayModeBar': False
+                                            }
+                                        )
                                     ]
                                 )
                             ),
