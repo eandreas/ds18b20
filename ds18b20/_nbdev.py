@@ -4,9 +4,18 @@ __all__ = ["index", "modules", "custom_doc_links", "git_url"]
 
 index = {"add_one_wire_modules": "00_device.ipynb",
          "DataPoint": "00_device.ipynb",
-         "Device": "00_device.ipynb"}
+         "Device": "00_device.ipynb",
+         "DEFAULT_PI_PATH": "01_data.ipynb",
+         "FALLBACK_PATH": "01_data.ipynb",
+         "convert_time": "01_data.ipynb",
+         "load_data": "01_data.ipynb",
+         "new_x_y": "02_figures.ipynb",
+         "add_trace": "02_figures.ipynb",
+         "get_figure": "02_figures.ipynb"}
 
-modules = ["device.py"]
+modules = ["device.py",
+           "data.py",
+           "figures.py"]
 
 doc_url = "https://eandreas.github.io/ds18b20/"
 

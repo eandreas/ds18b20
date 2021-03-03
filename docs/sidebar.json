@@ -1,6 +1,8 @@
 {
   "ds18b20": {
     "Overview": "/",
-    "ds18b20": "device.html"
+    "ds18b20": "device.html",
+    "data": "data.html",
+    "ds18b20.figures": "figures.html"
   }
 }

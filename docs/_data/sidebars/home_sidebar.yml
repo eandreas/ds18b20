@@ -12,6 +12,12 @@ entries:
     - output: web,pdf
       title: ds18b20
       url: device.html
+    - output: web,pdf
+      title: data
+      url: data.html
+    - output: web,pdf
+      title: ds18b20.figures
+      url: figures.html
     output: web
     title: ds18b20
   output: web
