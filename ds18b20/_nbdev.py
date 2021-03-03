@@ -2,11 +2,11 @@
 
 __all__ = ["index", "modules", "custom_doc_links", "git_url"]
 
-index = {"add_one_wire_modules": "00_core.ipynb",
-         "DataPoint": "00_core.ipynb",
-         "Device": "00_core.ipynb"}
+index = {"add_one_wire_modules": "00_device.ipynb",
+         "DataPoint": "00_device.ipynb",
+         "Device": "00_device.ipynb"}
 
-modules = ["core.py"]
+modules = ["device.py"]
 
 doc_url = "https://eandreas.github.io/ds18b20/"
 

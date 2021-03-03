@@ -12,7 +12,7 @@ This file will become your README and also the index of your documentation.
 
 Fill me in please! Don't forget code examples:
 
-```
+```python
 device = Device(base_dir='resources/')
 
 # values from calibration
@@ -33,6 +33,6 @@ for dp in temps:
 
 ```
 
-    28-03219779d857 2021-02-12 22:59:31.185111 21.959
-    28-03219779d339 2021-02-12 22:59:31.185220 20.750
+    28-03219779d857 2021-03-03 22:29:15.202070 21.959
+    28-03219779d339 2021-03-03 22:29:15.202197 20.750
 

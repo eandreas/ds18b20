@@ -1,4 +1,4 @@
-from ds18b20.core import *
+from ds18b20.device import *
 
 device = Device()
 

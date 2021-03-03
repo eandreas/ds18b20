@@ -11,7 +11,7 @@ entries:
       url: /
     - output: web,pdf
       title: ds18b20
-      url: core.html
+      url: device.html
     output: web
     title: ds18b20
   output: web
