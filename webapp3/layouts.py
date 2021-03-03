@@ -5,29 +5,29 @@ import dash_bootstrap_components as dbc
 # from dataloader import DataProviderSingleton
 # import pandas as pd
 from figures import serve_figure, get_figure, CS
-from data import load_data
-
+from ds18b20.data import load_data
 
 
 
 # FIXME do this properly
-df = load_data()['28-032197791b3c']
-df2 = df.iloc[::-60].copy()
-x = df2.timestamp.values
-y = df2.temp_C.values
-fig = get_figure(x, y, 5000, 5, 5, CS, 19, 24, convert_ts=True)
+def get_fig():
+    df = load_data()['28-032197791b3c']
+    df2 = df.iloc[::-60].copy()
+    x = df2.timestamp.values
+    y = df2.temp_C.values
+    return get_figure(x, y, 5000, 5, 5, CS, 19, 24, convert_ts=True)
 
 
 card_content_1 = [
     # dbc.CardHeader("Aktuelle Temperatur"),
     dbc.CardBody(
         children=[
-            html.H2("21.4 °C", className="card-title"),
+            html.H2("-- °C", className="card-title"),
             html.P(
                 [
                     "Messwert vom:",
                     html.Br(),
-                    "20. Februar 21:56 Uhr",
+                    "DD.MMM --:-- Uhr",
                 ],
                 className="card-text",
             )
@@ -39,7 +39,7 @@ card_content_2 = [
     # dbc.CardHeader("Durchschnittstemperatur"),
     dbc.CardBody(
         [
-            html.H2("20.1 °C", className="card-title"),
+            html.H2("-- °C", className="card-title"),
             html.P(
                 [
                     "Berücksichtigter Zeitraum:",
@@ -56,7 +56,7 @@ card_content_3 = [
     # dbc.CardHeader("Veränderung"),
     dbc.CardBody(
         [
-            html.H2("stabil", className="card-title"),
+            html.H2("--", className="card-title"),
             html.P(
                 "Die Aktuelle veränderung kann steigend, sinkend oder stabil sein.",
                 className="card-text",
@@ -95,7 +95,7 @@ def serve_layout():
                                 dbc.CardBody(
                                     children=[
                                         dcc.Graph(
-                                            figure = fig,
+                                            figure = get_fig(),
                                             config={
                                                 'displayModeBar': False
                                             }
